@@ -162,9 +162,15 @@ func createMCPClients(
 					"no arguments provided for sse command",
 				)
 			}
+			options := []mcpclient.ClientOption{}
 
+			if len(server.Args) > 1 && server.Args[1] != "" {
+				options = append(options, mcpclient.WithHeaders(map[string]string{
+					"Authorization": "Bearer " + server.Args[1],
+				}))
+			}
 			client, err = mcpclient.NewSSEMCPClient(
-				server.Args[0],
+				server.Args[0], options...,
 			)
 			if err == nil {
 				err = client.(*mcpclient.SSEMCPClient).Start(context.Background())
