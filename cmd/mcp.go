@@ -169,6 +169,10 @@ func createMCPClients(
 					"Authorization": "Bearer " + server.Args[1],
 				}))
 			}
+			// for some reason there must be a timeout. This is the workaround
+			// TODO: find a better way to do this
+			options = append(options, mcpclient.WithSSEReadTimeout(3600*time.Second))
+
 			client, err = mcpclient.NewSSEMCPClient(
 				server.Args[0], options...,
 			)
